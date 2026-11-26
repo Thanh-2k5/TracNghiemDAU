@@ -9,8 +9,15 @@ venv/
 ENV/
 env/
 
-# Environment variables
+# Environment & local client config
 .env
+.client_config.json
+
+# Backups & logs & local databases
+backups/
+*.log
+*.sqlite3
+*.db
 
 # IDEs and Editors
 .vscode/
@@ -22,13 +29,7 @@ env/
 .DS_Store
 Thumbs.db
 
-# Logs and databases
-*.log
-*.sqlite3
-*.db
-
 # Build / packaging
 build/
 dist/
 *.egg-info/
-

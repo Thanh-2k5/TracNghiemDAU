@@ -1,0 +1,1240 @@
+<!DOCTYPE html>
+<html lang="vi">
+ <head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1" name="viewport"/>
+  <title>
+   Menu chức năng theo tác nhân (Kèm Input / Output) — Hệ thống thi trắc nghiệm DAU
+  </title>
+  <link rel="stylesheet" href="menu_module_tan_cung_theo_tac_nhan_DAU.css"/>
+  <style>
+   :root {
+    --bg: #f8f6f0;
+    --card-bg: #ffffff;
+    --text-main: #132036;
+    --text-muted: #52637a;
+    --border-color: #e2e8f0;
+    --in-bg: #e0f2fe;
+    --in-text: #0369a1;
+    --out-bg: #dcfce7;
+    --out-text: #15803d;
+   }
+   * {
+    box-sizing: border-box;
+   }
+   body {
+    margin: 0;
+    padding: 24px;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background-color: var(--bg);
+    color: var(--text-main);
+    line-height: 1.5;
+   }
+   .page {
+    max-width: 100%;
+    margin: 0 auto;
+   }
+   h1 {
+    margin: 0 0 8px 0;
+    font-size: 28px;
+    font-weight: 800;
+    color: #132036;
+   }
+   .subtitle {
+    margin: 0 0 20px 0;
+    color: var(--text-muted);
+    font-size: 15px;
+   }
+   .toolbar {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+   }
+   .toolbar button {
+    padding: 8px 16px;
+    border-radius: 8px;
+    border: 1px solid #cbd5e1;
+    background: #ffffff;
+    color: #1e293b;
+    font-weight: 600;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+   }
+   .toolbar button:hover {
+    background: #132036;
+    color: #ffffff;
+    border-color: #132036;
+   }
+   .roles {
+    display: grid;
+    grid-template-columns: repeat(7, minmax(320px, 1fr));
+    gap: 16px;
+    align-items: start;
+    overflow-x: auto;
+    padding-bottom: 16px;
+   }
+   .role-card {
+    background: var(--card-bg);
+    border-radius: 12px;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 2px 6px rgba(19, 32, 54, 0.05);
+    overflow: hidden;
+   }
+   .role-head {
+    padding: 16px 20px;
+    color: #ffffff;
+    background: #132036;
+   }
+   .role-card--1 .role-head { background: #b85d19; }
+   .role-card--2 .role-head { background: #1d4ed8; }
+   .role-card--3 .role-head { background: #0f766e; }
+   .role-card--4 .role-head { background: #6d28d9; }
+   .role-card--5 .role-head { background: #be123c; }
+   .role-card--6 .role-head { background: #0369a1; }
+   .role-card--7 .role-head { background: #15803d; }
+   .role-head h2 {
+    margin: 0 0 4px 0;
+    font-size: 18px;
+    font-weight: 700;
+    color: #ffffff;
+   }
+   .role-head p {
+    margin: 0;
+    font-size: 13px;
+    opacity: 0.9;
+    color: #ffffff;
+   }
+   .role-body {
+    padding: 14px 16px;
+   }
+   details.menu {
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    margin-bottom: 12px;
+    background: #fcfcfd;
+    overflow: hidden;
+   }
+   details.menu:last-child {
+    margin-bottom: 0;
+   }
+   details.menu summary {
+    list-style: none;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 14px;
+    background: #f1f5f9;
+    cursor: pointer;
+    font-weight: 700;
+    font-size: 14px;
+    user-select: none;
+   }
+   details.menu summary::-webkit-details-marker {
+    display: none;
+   }
+   .caret {
+    font-size: 12px;
+    transition: transform 0.2s ease;
+   }
+   details.menu:not([open]) .caret {
+    transform: rotate(-90deg);
+   }
+   .menu-title {
+    flex: 1;
+   }
+   .menu-code {
+    background: #e2e8f0;
+    color: #334155;
+    padding: 2px 8px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 700;
+   }
+   details.menu ul {
+    list-style: none;
+    margin: 0;
+    padding: 8px 12px;
+   }
+   details.menu li {
+    padding: 10px 8px;
+    border-bottom: 1px dashed #e2e8f0;
+   }
+   details.menu li:last-child {
+    border-bottom: none;
+   }
+   .leaf-top {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    margin-bottom: 6px;
+    flex-wrap: wrap;
+   }
+   .leaf-code {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-size: 12px;
+    font-weight: 700;
+    color: #2563eb;
+    background: #eff6ff;
+    padding: 2px 6px;
+    border-radius: 4px;
+    flex-shrink: 0;
+   }
+   .leaf-name {
+    font-weight: 600;
+    font-size: 14px;
+    color: #0f172a;
+   }
+   .reuse-tag {
+    display: inline-block;
+    font-size: 11.5px;
+    font-weight: 600;
+    color: #9333ea;
+    background: #f3e8ff;
+    border: 1px solid #d8b4fe;
+    padding: 1px 7px;
+    border-radius: 4px;
+   }
+   .io-box {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding-left: 8px;
+    border-left: 2px solid #cbd5e1;
+    margin-left: 4px;
+    font-size: 12.5px;
+   }
+   .io-row {
+    display: flex;
+    align-items: baseline;
+    gap: 6px;
+   }
+   .badge-in, .badge-out {
+    font-size: 11px;
+    font-weight: 700;
+    padding: 1px 6px;
+    border-radius: 4px;
+    flex-shrink: 0;
+    text-transform: uppercase;
+    min-width: 54px;
+    text-align: center;
+   }
+   .badge-in {
+    background: var(--in-bg);
+    color: var(--in-text);
+   }
+   .badge-out {
+    background: var(--out-bg);
+    color: var(--out-text);
+   }
+   .io-text {
+    color: #334155;
+   }
+  </style>
+ </head>
+ <body>
+  <main class="page">
+   <h1>
+    Menu chức năng theo tác nhân — Hệ thống thi trắc nghiệm DAU
+   </h1>
+   <p class="subtitle">
+    Bản phân rã module tận cùng kèm đặc tả Input / Output: đã gộp các thao tác Thêm / Sửa / Xóa / Trạng thái và ghi chú tái sử dụng module của tác nhân trước.
+   </p>
+   <div class="toolbar">
+    <button onclick="document.querySelectorAll('details.menu').forEach(x=&gt;x.open=true)" type="button">
+     Mở toàn bộ
+    </button>
+    <button onclick="document.querySelectorAll('details.menu').forEach(x=&gt;x.open=false)" type="button">
+     Thu gọn toàn bộ
+    </button>
+    <button onclick="document.querySelectorAll('.io-box').forEach(x=&gt;x.style.display = x.style.display === 'none' ? 'flex' : 'none')" type="button">
+     Ẩn / Hiện Input &amp; Output
+    </button>
+   </div>
+   <section class="roles">
+    <!-- 1. ADMIN -->
+    <article class="role-card role-card--1">
+     <header class="role-head">
+      <h2>
+       Admin
+      </h2>
+      <p>
+       5 nhóm chức năng · 12 module tận cùng (đã gộp &amp; tái sử dụng)
+      </p>
+     </header>
+     <div class="role-body">
+      <details class="menu" open="">
+       <summary>
+        <span class="caret">▾</span>
+        <span class="menu-title">Xác thực và phiên đăng nhập</span>
+        <span class="menu-code">1.1</span>
+       </summary>
+       <ul>
+        <li>
+         <div class="leaf-top">
+          <span class="leaf-code">1.1.1</span>
+          <span class="leaf-name">Đăng nhập</span>
+         </div>
+         <div class="io-box">
+          <div class="io-row"><span class="badge-in">Input</span><span class="io-text">Tên đăng nhập, mật khẩu</span></div>
+          <div class="io-row"><span class="badge-out">Output</span><span class="io-text">Token xác thực (JWT/Session), thông tin phân quyền Admin, chuyển hướng trang quản trị</span></div>
+         </div>
+        </li>
+        <li>
+         <div class="leaf-top">
+          <span class="leaf-code">1.1.2</span>
+          <span class="leaf-name">Đăng xuất và đóng kết nối Socket</span>
+         </div>
+         <div class="io-box">
+          <div class="io-row"><span class="badge-in">Input</span><span class="io-text">Yêu cầu đăng xuất, Token xác thực, Socket ID</span></div>
+          <div class="io-row"><span class="badge-out">Output</span><span class="io-text">Hủy phiên làm việc, xóa token, ngắt kết nối socket an toàn, chuyển hướng về trang đăng nhập</span></div>
+         </div>
+        </li>
+        <li>
+         <div class="leaf-top">
+          <span class="leaf-code">1.1.3</span>
+          <span class="leaf-name">Kiểm tra trùng phiên đăng nhập</span>
+         </div>
+         <div class="io-box">
+          <div class="io-row"><span class="badge-in">Input</span><span class="io-text">ID tài khoản, thông tin phiên hiện tại</span></div>
+          <div class="io-row"><span class="badge-out">Output</span><span class="io-text">Trạng thái hợp lệ hoặc cảnh báo đăng nhập song song (đăng xuất phiên cũ hoặc từ chối)</span></div>
+         </div>
+        </li>
+       </ul>
+      </details>
+      <details class="menu" open="">
+       <summary>
+        <span class="caret">▾</span>
+        <span class="menu-title">Thông tin cá nhân</span>
+        <span class="menu-code">1.2</span>
+       </summary>
+       <ul>
+        <li>
+         <div class="leaf-top">
+          <span class="leaf-code">1.2.1</span>
+          <span class="leaf-name">Xem và cập nhật thông tin cá nhân</span>
+         </div>
+         <div class="io-box">
+          <div class="io-row"><span class="badge-in">Input</span><span class="io-text">ID Admin, Token xác thực, dữ liệu thay đổi (Họ tên, email, số điện thoại)</span></div>
+          <div class="io-row"><span class="badge-out">Output</span><span class="io-text">Thông tin chi tiết cá nhân, thông báo cập nhật thành công/thất bại</span></div>
+         </div>
+        </li>
+        <li>
+         <div class="leaf-top">
+          <span class="leaf-code">1.2.2</span>
+          <span class="leaf-name">Đổi mật khẩu</span>
+         </div>
+         <div class="io-box">
+          <div class="io-row"><span class="badge-in">Input</span><span class="io-text">Mật khẩu cũ, mật khẩu mới, xác nhận mật khẩu mới</span></div>
+          <div class="io-row"><span class="badge-out">Output</span><span class="io-text">Thông báo đổi mật khẩu thành công hoặc lỗi xác thực mật khẩu cũ</span></div>
+         </div>
+        </li>
+       </ul>
+      </details>
+      <details class="menu" open="">
+       <summary>
+        <span class="caret">▾</span>
+        <span class="menu-title">Quản lý tài khoản</span>
+        <span class="menu-code">1.3</span>
+       </summary>
+       <ul>
+        <li>
+         <div class="leaf-top">
+          <span class="leaf-code">1.3.1</span>
+          <span class="leaf-name">Thêm, sửa, khóa/mở khóa trạng thái tài khoản</span>
+         </div>
+         <div class="io-box">
+          <div class="io-row"><span class="badge-in">Input</span><span class="io-text">Thông tin tài khoản (Username, password, họ tên, vai trò, email), ID tài khoản, trạng thái (Hoạt động / Đã khóa)</span></div>
+          <div class="io-row"><span class="badge-out">Output</span><span class="io-text">Bản ghi tài khoản được thêm mới, cập nhật thông tin hoặc chuyển đổi trạng thái khóa/mở khóa thành công</span></div>
+         </div>
+        </li>
+        <li>
+         <div class="leaf-top">
+          <span class="leaf-code">1.3.2</span>
+          <span class="leaf-name">Đặt lại mật khẩu</span>
+         </div>
+         <div class="io-box">
+          <div class="io-row"><span class="badge-in">Input</span><span class="io-text">ID tài khoản cần reset mật khẩu</span></div>
+          <div class="io-row"><span class="badge-out">Output</span><span class="io-text">Mật khẩu mặc định mới hoặc thông báo reset thành công</span></div>
+         </div>
+        </li>
+        <li>
+         <div class="leaf-top">
+          <span class="leaf-code">1.3.3</span>
+          <span class="leaf-name">Gán vai trò cho tài khoản</span>
+         </div>
+         <div class="io-box">
+          <div class="io-row"><span class="badge-in">Input</span><span class="io-text">ID tài khoản, danh sách vai trò (Role) được phân quyền</span></div>
+          <div class="io-row"><span class="badge-out">Output</span><span class="io-text">Cập nhật bảng phân quyền thành công cho tài khoản</span></div>
+         </div>
+        </li>
+       </ul>
+      </details>
+      <details class="menu" open="">
+       <summary>
+        <span class="caret">▾</span>
+        <span class="menu-title">Quản trị mạng</span>
+        <span class="menu-code">1.4</span>
+       </summary>
+       <ul>
+        <li>
+         <div class="leaf-top">
+          <span class="leaf-code">1.4.1</span>
+          <span class="leaf-name">Cấu hình địa chỉ IP và Port Server</span>
+         </div>
+         <div class="io-box">
+          <div class="io-row"><span class="badge-in">Input</span><span class="io-text">Địa chỉ IP mới và số cổng Port mới của Server</span></div>
+          <div class="io-row"><span class="badge-out">Output</span><span class="io-text">Lưu thành công cấu hình mạng (IP/Port) vào hệ thống</span></div>
+         </div>
+        </li>
+        <li>
+         <div class="leaf-top">
+          <span class="leaf-code">1.4.2</span>
+          <span class="leaf-name">Điều khiển trạng thái Server (Khởi động / Dừng)</span>
+         </div>
+         <div class="io-box">
+          <div class="io-row"><span class="badge-in">Input</span><span class="io-text">Lệnh kích hoạt khởi động hoặc dừng dịch vụ Server</span></div>
+          <div class="io-row"><span class="badge-out">Output</span><span class="io-text">Trạng thái dịch vụ chuyển sang Running hoặc Stopped, đóng/mở cổng kết nối an toàn</span></div>
+         </div>
+        </li>
+        <li>
+         <div class="leaf-top">
+          <span class="leaf-code">1.4.3</span>
+          <span class="leaf-name">Theo dõi trạng thái kết nối</span>
+         </div>
+         <div class="io-box">
+          <div class="io-row"><span class="badge-in">Input</span><span class="io-text">Yêu cầu làm mới (Refresh) trạng thái mạng</span></div>
+          <div class="io-row"><span class="badge-out">Output</span><span class="io-text">Danh sách các kết nối hiện tại, băng thông sử dụng, trạng thái các Socket đang mở</span></div>
+         </div>
+        </li>
+       </ul>
+      </details>
+      <details class="menu" open="">
+       <summary>
+        <span class="caret">▾</span>
+        <span class="menu-title">Dữ liệu và vận hành</span>
+        <span class="menu-code">1.5</span>
+       </summary>
+       <ul>
+        <li>
+         <div class="leaf-top">
+          <span class="leaf-code">1.5.1</span>
+          <span class="leaf-name">Sao lưu và phục hồi dữ liệu</span>
+         </div>
+         <div class="io-box">
+          <div class="io-row"><span class="badge-in">Input</span><span class="io-text">Lệnh sao lưu (tùy chọn đường dẫn) hoặc tệp tin sao lưu (.sql / file backup) cần khôi phục</span></div>
+          <div class="io-row"><span class="badge-out">Output</span><span class="io-text">File sao lưu cơ sở dữ liệu hoặc trạng thái khôi phục dữ liệu hệ thống thành công</span></div>
+         </div>
+        </li>
+       </ul>
+      </details>
+     </div>
+    </article>
+
+    <!-- 2. PHÒNG CÔNG TÁC SINH VIÊN -->
+    <article class="role-card role-card--2">
+     <header class="role-head">
+      <h2>
+       Phòng Công tác Sinh viên
+      </h2>
+      <p>
+       2 nhóm chức năng · 5 module tận cùng (đã gộp &amp; tái sử dụng)
+      </p>
+     </header>
+     <div class="role-body">
+      <details class="menu" open="">
+       <summary>
+        <span class="caret">▾</span>
+        <span class="menu-title">Xác thực & Thông tin cá nhân</span>
+        <span class="menu-code">2.0</span>
+       </summary>
+       <ul>
+        <li>
+         <div class="leaf-top">
+          <span class="leaf-code">2.0.1</span>
+          <span class="leaf-name">Xác thực phiên đăng nhập & Quản lý thông tin cá nhân</span>
+          <span class="reuse-tag">♻ Tái sử dụng module 1.1, 1.2 của Admin</span>
+         </div>
+         <div class="io-box">
+          <div class="io-row"><span class="badge-in">Input</span><span class="io-text">Thông tin đăng nhập, Token phiên làm việc, thông tin cá nhân cần cập nhật/đổi mật khẩu</span></div>
+          <div class="io-row"><span class="badge-out">Output</span><span class="io-text">Phiên làm việc của Phòng CTSV, cập nhật thông tin cá nhân thành công</span></div>
+         </div>
+        </li>
+       </ul>
+      </details>
+      <details class="menu" open="">
+       <summary>
+        <span class="caret">▾</span>
+        <span class="menu-title">Quản lý hồ sơ và trạng thái sinh viên</span>
+        <span class="menu-code">2.1</span>
+       </summary>
+       <ul>
+        <li>
+         <div class="leaf-top">
+          <span class="leaf-code">2.1.1</span>
+          <span class="leaf-name">Thêm, sửa, khóa tài khoản và cập nhật trạng thái học tập sinh viên</span>
+         </div>
+         <div class="io-box">
+          <div class="io-row"><span class="badge-in">Input</span><span class="io-text">Thông tin sinh viên (Mã SV, họ tên, ngày sinh, giới tính, lớp, ngành), trạng thái tài khoản, trạng thái học tập (Đang học / Bảo lưu / Đình chỉ thi)</span></div>
+          <div class="io-row"><span class="badge-out">Output</span><span class="io-text">Hồ sơ và trạng thái học tập/tài khoản của sinh viên được thêm mới hoặc cập nhật thành công</span></div>
+         </div>
+        </li>
+        <li>
+         <div class="leaf-top">
+          <span class="leaf-code">2.1.2</span>
+          <span class="leaf-name">Nhập danh sách sinh viên từ Excel</span>
+         </div>
+         <div class="io-box">
+          <div class="io-row"><span class="badge-in">Input</span><span class="io-text">Tệp tin Excel chứa danh sách sinh viên theo biểu mẫu</span></div>
+          <div class="io-row"><span class="badge-out">Output</span><span class="io-text">Danh sách sinh viên được import hàng loạt vào cơ sở dữ liệu kèm báo cáo kết quả</span></div>
+         </div>
+        </li>
+       
+        <li>
+         <div class="leaf-top">
+          <span class="leaf-code">2.1.3</span>
+          <span class="leaf-name">Tìm kiếm và lọc sinh viên (theo mã SV, họ tên, lớp, ngành)</span>
+         </div>
+         <div class="io-box">
+          <div class="io-row"><span class="badge-in">Input</span><span class="io-text">Từ khóa tìm kiếm (Mã SV, họ tên) và tiêu chí lọc (Lớp, ngành đào tạo)</span></div>
+          <div class="io-row"><span class="badge-out">Output</span><span class="io-text">Danh sách sinh viên khớp với từ khóa và bộ lọc tương ứng</span></div>
+         </div>
+        </li>
+       </ul>
+      </details>
+     </div>
+    </article>
+
+    <!-- 3. PHÒNG ĐÀO TẠO -->
+    <article class="role-card role-card--3">
+     <header class="role-head">
+      <h2>
+       Phòng Đào tạo
+      </h2>
+      <p>
+       5 nhóm chức năng · 5 module tận cùng (đã gộp &amp; tái sử dụng)
+      </p>
+     </header>
+     <div class="role-body">
+      <details class="menu" open="">
+       <summary>
+        <span class="caret">▾</span>
+        <span class="menu-title">Xác thực & Thông tin cá nhân</span>
+        <span class="menu-code">3.0</span>
+       </summary>
+       <ul>
+        <li>
+         <div class="leaf-top">
+          <span class="leaf-code">3.0.1</span>
+          <span class="leaf-name">Xác thực phiên đăng nhập & Quản lý thông tin cá nhân</span>
+          <span class="reuse-tag">♻ Tái sử dụng module 1.1, 1.2 của Admin</span>
+         </div>
+         <div class="io-box">
+          <div class="io-row"><span class="badge-in">Input</span><span class="io-text">Thông tin đăng nhập, Token phiên làm việc, thông tin cá nhân</span></div>
+          <div class="io-row"><span class="badge-out">Output</span><span class="io-text">Phiên làm việc của Phòng Đào tạo, cập nhật thông tin cá nhân thành công</span></div>
+         </div>
+        </li>
+       </ul>
+      </details>
+      <details class="menu" open="">
+       <summary>
+        <span class="caret">▾</span>
+        <span class="menu-title">Quản lý danh sách sinh viên</span>
+        <span class="menu-code">3.1</span>
+       </summary>
+       <ul>
+        <li>
+         <div class="leaf-top">
+          <span class="leaf-code">3.1.1</span>
+          <span class="leaf-name">Xem, tìm kiếm và lọc danh sách sinh viên</span>
+          <span class="reuse-tag">♻ Tái sử dụng module 2.1.4 của Phòng CTSV</span>
+         </div>
+         <div class="io-box">
+          <div class="io-row"><span class="badge-in">Input</span><span class="io-text">Yêu cầu tải danh sách, từ khóa (Mã SV, họ tên), tiêu chí lọc (Lớp, ngành học)</span></div>
+          <div class="io-row"><span class="badge-out">Output</span><span class="io-text">Hiển thị danh sách sinh viên theo bộ lọc và từ khóa tìm kiếm</span></div>
+         </div>
+        </li>
+       </ul>
+      </details>
+      <details class="menu" open="">
+       <summary>
+        <span class="caret">▾</span>
+        <span class="menu-title">Kiểm tra điều kiện dự thi</span>
+        <span class="menu-code">3.2</span>
+       </summary>
+       <ul>
+        <li>
+         <div class="leaf-top">
+          <span class="leaf-code">3.2.1</span>
+          <span class="leaf-name">Kiểm tra điều kiện và xác định sinh viên đủ tư cách dự thi</span>
+         </div>
+         <div class="io-box">
+          <div class="io-row"><span class="badge-in">Input</span><span class="io-text">Mã SV, mã học phần, dữ liệu đăng ký tín chỉ, điểm quá trình, học phí, trạng thái học tập (tái sử dụng dữ liệu trạng thái từ 2.1.1 của Phòng CTSV)</span></div>
+          <div class="io-row"><span class="badge-out">Output</span><span class="io-text">Kết quả kiểm tra tư cách và danh sách sinh viên chính thức đủ điều kiện dự thi</span></div>
+         </div>
+        </li>
+       </ul>
+      </details>
+      <details class="menu" open="">
+       <summary>
+        <span class="caret">▾</span>
+        <span class="menu-title">Lập và phê duyệt danh sách dự thi</span>
+        <span class="menu-code">3.3</span>
+       </summary>
+       <ul>
+        <li>
+         <div class="leaf-top">
+          <span class="leaf-code">3.3.1</span>
+          <span class="leaf-name">Quản lý danh sách dự thi (Chọn, Thêm, Sửa, Xóa, Gán kỳ thi, Xác nhận & Chốt trạng thái)</span>
+         </div>
+         <div class="io-box">
+          <div class="io-row"><span class="badge-in">Input</span><span class="io-text">Mã SV, mã kỳ thi/môn thi, dữ liệu cập nhật, lệnh chuyển trạng thái (Xác nhận / Chốt khóa danh sách)</span></div>
+          <div class="io-row"><span class="badge-out">Output</span><span class="io-text">Danh sách dự thi được cập nhật, gán vào kỳ thi và khóa trạng thái chính thức phục vụ xếp phòng thi</span></div>
+         </div>
+        </li>
+       </ul>
+      </details>
+      <details class="menu" open="">
+       <summary>
+        <span class="caret">▾</span>
+        <span class="menu-title">Tra cứu và xuất danh sách</span>
+        <span class="menu-code">3.4</span>
+       </summary>
+       <ul>
+        <li>
+         <div class="leaf-top">
+          <span class="leaf-code">3.4.1</span>
+          <span class="leaf-name">Tra cứu danh sách dự thi (theo kỳ thi, môn học) và xuất Excel</span>
+         </div>
+         <div class="io-box">
+          <div class="io-row"><span class="badge-in">Input</span><span class="io-text">Mã kỳ thi, mã môn học/học phần, yêu cầu xuất báo cáo</span></div>
+          <div class="io-row"><span class="badge-out">Output</span><span class="io-text">Danh sách sinh viên dự thi hiển thị trên màn hình hoặc tệp tin Excel (.xlsx)</span></div>
+         </div>
+        </li>
+       </ul>
+      </details>
+     </div>
+    </article>
+
+    <!-- 4. KHOA -->
+    <article class="role-card role-card--4">
+     <header class="role-head">
+      <h2>
+       Khoa
+      </h2>
+      <p>
+       4 nhóm chức năng · 8 module tận cùng (đã gộp &amp; tái sử dụng)
+      </p>
+     </header>
+     <div class="role-body">
+      <details class="menu" open="">
+       <summary>
+        <span class="caret">▾</span>
+        <span class="menu-title">Xác thực & Thông tin cá nhân</span>
+        <span class="menu-code">4.0</span>
+       </summary>
+       <ul>
+        <li>
+         <div class="leaf-top">
+          <span class="leaf-code">4.0.1</span>
+          <span class="leaf-name">Xác thực phiên đăng nhập & Quản lý thông tin cá nhân</span>
+          <span class="reuse-tag">♻ Tái sử dụng module 1.1, 1.2 của Admin</span>
+         </div>
+         <div class="io-box">
+          <div class="io-row"><span class="badge-in">Input</span><span class="io-text">Thông tin đăng nhập, Token phiên làm việc, thông tin cá nhân</span></div>
+          <div class="io-row"><span class="badge-out">Output</span><span class="io-text">Phiên làm việc của Khoa, cập nhật thông tin cá nhân thành công</span></div>
+         </div>
+        </li>
+       </ul>
+      </details>
+      <details class="menu" open="">
+       <summary>
+        <span class="caret">▾</span>
+        <span class="menu-title">Quản lý môn học / học phần</span>
+        <span class="menu-code">4.1</span>
+       </summary>
+       <ul>
+        <li>
+         <div class="leaf-top">
+          <span class="leaf-code">4.1.1</span>
+          <span class="leaf-name">Thêm, sửa, xóa và cập nhật thông số học phần</span>
+         </div>
+         <div class="io-box">
+          <div class="io-row"><span class="badge-in">Input</span><span class="io-text">Mã môn, tên môn, số tín chỉ, thời gian thi, thao tác (Thêm / Sửa / Xóa)</span></div>
+          <div class="io-row"><span class="badge-out">Output</span><span class="io-text">Lưu mới, cập nhật thông số hoặc xóa học phần khỏi cơ sở dữ liệu</span></div>
+         </div>
+        </li>
+        <li>
+         <div class="leaf-top">
+          <span class="leaf-code">4.1.2</span>
+          <span class="leaf-name">Tìm kiếm môn học</span>
+         </div>
+         <div class="io-box">
+          <div class="io-row"><span class="badge-in">Input</span><span class="io-text">Từ khóa (Mã môn hoặc tên môn)</span></div>
+          <div class="io-row"><span class="badge-out">Output</span><span class="io-text">Danh sách môn học tìm kiếm phù hợp</span></div>
+         </div>
+        </li>
+       </ul>
+      </details>
+      <details class="menu" open="">
+       <summary>
+        <span class="caret">▾</span>
+        <span class="menu-title">Quản lý chương kiến thức</span>
+        <span class="menu-code">4.2</span>
+       </summary>
+       <ul>
+        <li>
+         <div class="leaf-top">
+          <span class="leaf-code">4.2.1</span>
+          <span class="leaf-name">Thêm, sửa, xóa chương kiến thức</span>
+         </div>
+         <div class="io-box">
+          <div class="io-row"><span class="badge-in">Input</span><span class="io-text">Mã học phần, ID chương, tên chương kiến thức, thứ tự chương</span></div>
+          <div class="io-row"><span class="badge-out">Output</span><span class="io-text">Thêm mới, cập nhật hoặc xóa chương kiến thức của học phần thành công</span></div>
+         </div>
+        </li>
+       </ul>
+      </details>
+      <details class="menu" open="">
+       <summary>
+        <span class="caret">▾</span>
+        <span class="menu-title">Quản lý ngân hàng câu hỏi</span>
+        <span class="menu-code">4.3</span>
+       </summary>
+       <ul>
+        <li>
+         <div class="leaf-top">
+          <span class="leaf-code">4.3.1</span>
+          <span class="leaf-name">Thêm, sửa, xóa, thiết lập thuộc tính và trạng thái ẩn/hiện câu hỏi</span>
+         </div>
+         <div class="io-box">
+          <div class="io-row"><span class="badge-in">Input</span><span class="io-text">ID câu hỏi, nội dung, phương án A/B/C/D, đáp án đúng, mức độ khó (Dễ/TB/Khó), chương kiến thức, trạng thái (Active / Ẩn câu hỏi lỗi)</span></div>
+          <div class="io-row"><span class="badge-out">Output</span><span class="io-text">Lưu mới, cập nhật nội dung/độ khó, ẩn hoặc xóa câu hỏi trong ngân hàng câu hỏi</span></div>
+         </div>
+        </li>
+        <li>
+         <div class="leaf-top">
+          <span class="leaf-code">4.3.2</span>
+          <span class="leaf-name">Nhập câu hỏi từ Excel/Word</span>
+         </div>
+         <div class="io-box">
+          <div class="io-row"><span class="badge-in">Input</span><span class="io-text">File tài liệu chứa danh sách câu hỏi theo đúng biểu mẫu quy định</span></div>
+          <div class="io-row"><span class="badge-out">Output</span><span class="io-text">Import hàng loạt câu hỏi vào ngân hàng kèm bảng log kết quả</span></div>
+         </div>
+        </li>
+        <li>
+         <div class="leaf-top">
+          <span class="leaf-code">4.3.3</span>
+          <span class="leaf-name">Lập ma trận câu hỏi</span>
+         </div>
+         <div class="io-box">
+          <div class="io-row"><span class="badge-in">Input</span><span class="io-text">Tỷ lệ số câu hỏi theo từng chương và từng mức độ khó</span></div>
+          <div class="io-row"><span class="badge-out">Output</span><span class="io-text">Cấu trúc ma trận đề thi chuẩn cho môn học</span></div>
+         </div>
+        </li>
+        <li>
+         <div class="leaf-top">
+          <span class="leaf-code">4.3.4</span>
+          <span class="leaf-name">Lọc câu hỏi theo chương hoặc độ khó</span>
+         </div>
+         <div class="io-box">
+          <div class="io-row"><span class="badge-in">Input</span><span class="io-text">Tiêu chí lọc (Chương kiến thức hoặc mức độ khó)</span></div>
+          <div class="io-row"><span class="badge-out">Output</span><span class="io-text">Danh sách câu hỏi thỏa mãn bộ lọc</span></div>
+         </div>
+        </li>
+       </ul>
+      </details>
+     </div>
+    </article>
+
+    <!-- 5. PHÒNG KHẢO THÍ -->
+    <article class="role-card role-card--5">
+     <header class="role-head">
+      <h2>
+       Phòng Khảo thí
+      </h2>
+      <p>
+       7 nhóm chức năng · 9 module tận cùng (đã gộp &amp; tái sử dụng)
+      </p>
+     </header>
+     <div class="role-body">
+      <details class="menu" open="">
+       <summary>
+        <span class="caret">▾</span>
+        <span class="menu-title">Xác thực & Thông tin cá nhân</span>
+        <span class="menu-code">5.0</span>
+       </summary>
+       <ul>
+        <li>
+         <div class="leaf-top">
+          <span class="leaf-code">5.0.1</span>
+          <span class="leaf-name">Xác thực phiên đăng nhập & Quản lý thông tin cá nhân</span>
+          <span class="reuse-tag">♻ Tái sử dụng module 1.1, 1.2 của Admin</span>
+         </div>
+         <div class="io-box">
+          <div class="io-row"><span class="badge-in">Input</span><span class="io-text">Thông tin đăng nhập, Token phiên làm việc, thông tin cá nhân</span></div>
+          <div class="io-row"><span class="badge-out">Output</span><span class="io-text">Phiên làm việc của Phòng Khảo thí, cập nhật thông tin cá nhân thành công</span></div>
+         </div>
+        </li>
+       </ul>
+      </details>
+      <details class="menu" open="">
+       <summary>
+        <span class="caret">▾</span>
+        <span class="menu-title">Quản lý ca thi</span>
+        <span class="menu-code">5.1</span>
+       </summary>
+       <ul>
+        <li>
+         <div class="leaf-top">
+          <span class="leaf-code">5.1.1</span>
+          <span class="leaf-name">Thêm, sửa, xóa và thiết lập khung giờ ca thi</span>
+         </div>
+         <div class="io-box">
+          <div class="io-row"><span class="badge-in">Input</span><span class="io-text">ID ca thi, tên ca thi, ngày thi, giờ bắt đầu, giờ kết thúc</span></div>
+          <div class="io-row"><span class="badge-out">Output</span><span class="io-text">Tạo mới, cập nhật thông tin/khung giờ hoặc xóa ca thi thành công</span></div>
+         </div>
+        </li>
+       </ul>
+      </details>
+      <details class="menu" open="">
+       <summary>
+        <span class="caret">▾</span>
+        <span class="menu-title">Quản lý phòng thi</span>
+        <span class="menu-code">5.2</span>
+       </summary>
+       <ul>
+        <li>
+         <div class="leaf-top">
+          <span class="leaf-code">5.2.1</span>
+          <span class="leaf-name">Thêm, sửa, hủy trạng thái phòng thi và gán môn học / ca thi</span>
+         </div>
+         <div class="io-box">
+          <div class="io-row"><span class="badge-in">Input</span><span class="io-text">ID phòng thi, tên phòng, sức chứa tối đa, mã học phần, ID ca thi, trạng thái phòng thi</span></div>
+          <div class="io-row"><span class="badge-out">Output</span><span class="io-text">Tạo mới, cập nhật, hủy phòng thi hoặc liên kết môn học/ca thi vào phòng thi thành công</span></div>
+         </div>
+        </li>
+       </ul>
+      </details>
+      <details class="menu" open="">
+       <summary>
+        <span class="caret">▾</span>
+        <span class="menu-title">Xếp lịch thi</span>
+        <span class="menu-code">5.3</span>
+       </summary>
+       <ul>
+        <li>
+         <div class="leaf-top">
+          <span class="leaf-code">5.3.1</span>
+          <span class="leaf-name">Gán sinh viên đủ điều kiện vào phòng thi</span>
+          <span class="reuse-tag">♻ Tái sử dụng danh sách từ module 3.3.1, 3.4.1 của Phòng Đào tạo</span>
+         </div>
+         <div class="io-box">
+          <div class="io-row"><span class="badge-in">Input</span><span class="io-text">Danh sách sinh viên đủ điều kiện đã chốt, ID phòng thi, ID ca thi</span></div>
+          <div class="io-row"><span class="badge-out">Output</span><span class="io-text">Phân bổ sinh viên vào từng phòng thi cụ thể</span></div>
+         </div>
+        </li>
+        <li>
+         <div class="leaf-top">
+          <span class="leaf-code">5.3.2</span>
+          <span class="leaf-name">Phân công cán bộ coi thi vào phòng thi và ca thi</span>
+         </div>
+         <div class="io-box">
+          <div class="io-row"><span class="badge-in">Input</span><span class="io-text">Tài khoản cán bộ coi thi, ID phòng thi, ID ca thi</span></div>
+          <div class="io-row"><span class="badge-out">Output</span><span class="io-text">Giao quyền quản lý phòng thi cho cán bộ coi thi tương ứng</span></div>
+         </div>
+        </li>
+       </ul>
+      </details>
+      <details class="menu" open="">
+       <summary>
+        <span class="caret">▾</span>
+        <span class="menu-title">Quản lý kỳ thi</span>
+        <span class="menu-code">5.4</span>
+       </summary>
+       <ul>
+        <li>
+         <div class="leaf-top">
+          <span class="leaf-code">5.4.1</span>
+          <span class="leaf-name">Thêm, sửa và cập nhật trạng thái kỳ thi (Mở / Đóng kỳ thi)</span>
+         </div>
+         <div class="io-box">
+          <div class="io-row"><span class="badge-in">Input</span><span class="io-text">ID kỳ thi, tên kỳ thi, loại kỳ thi (Giữa kỳ / Cuối kỳ), thời gian, lệnh chuyển trạng thái (Đang mở / Đã đóng)</span></div>
+          <div class="io-row"><span class="badge-out">Output</span><span class="io-text">Tạo mới, cập nhật thông tin hoặc chuyển trạng thái đóng/mở kỳ thi</span></div>
+         </div>
+        </li>
+       </ul>
+      </details>
+      <details class="menu" open="">
+       <summary>
+        <span class="caret">▾</span>
+        <span class="menu-title">Thiết lập và sinh đề</span>
+        <span class="menu-code">5.5</span>
+       </summary>
+       <ul>
+        <li>
+         <div class="leaf-top">
+          <span class="leaf-code">5.5.1</span>
+          <span class="leaf-name">Thiết lập thông số và lập ma trận đề thi</span>
+          <span class="reuse-tag">♻ Tái sử dụng module 4.3.3 của Khoa</span>
+         </div>
+         <div class="io-box">
+          <div class="io-row"><span class="badge-in">Input</span><span class="io-text">Tổng số câu hỏi, thời gian làm bài (phút), phân bổ tỷ lệ câu hỏi theo chương và độ khó</span></div>
+          <div class="io-row"><span class="badge-out">Output</span><span class="io-text">Lưu thông số cấu hình và ma trận cấu trúc đề thi hoàn chỉnh</span></div>
+         </div>
+        </li>
+        <li>
+         <div class="leaf-top">
+          <span class="leaf-code">5.5.2</span>
+          <span class="leaf-name">Sinh đề thi tự động (Chọn câu hỏi theo ma trận, trộn câu hỏi/đáp án, tạo mã đề)</span>
+         </div>
+         <div class="io-box">
+          <div class="io-row"><span class="badge-in">Input</span><span class="io-text">Ma trận đề thi, ID môn học, ngân hàng câu hỏi của Khoa</span></div>
+          <div class="io-row"><span class="badge-out">Output</span><span class="io-text">Bộ các mã đề thi hoàn chỉnh đã được bốc ngẫu nhiên và xáo trộn thứ tự câu hỏi/đáp án</span></div>
+         </div>
+        </li>
+       </ul>
+      </details>
+      <details class="menu" open="">
+       <summary>
+        <span class="caret">▾</span>
+        <span class="menu-title">Quản lý kết quả thi</span>
+        <span class="menu-code">5.6</span>
+       </summary>
+       <ul>
+        <li>
+         <div class="leaf-top">
+          <span class="leaf-code">5.6.1</span>
+          <span class="leaf-name">Xem kết quả thi, tra cứu lịch sử bài làm, thống kê và xuất báo cáo (Excel/PDF)</span>
+          <span class="reuse-tag">♻ Tái sử dụng cơ chế xuất báo cáo từ module 3.4.1 của Phòng Đào tạo</span>
+         </div>
+         <div class="io-box">
+          <div class="io-row"><span class="badge-in">Input</span><span class="io-text">Mã kỳ thi, mã sinh viên, yêu cầu thống kê hoặc xuất file</span></div>
+          <div class="io-row"><span class="badge-out">Output</span><span class="io-text">Điểm số, chi tiết lịch sử chọn đáp án, biểu đồ thống kê (TB, Max, Min) và file Excel/PDF bảng điểm</span></div>
+         </div>
+        </li>
+       </ul>
+      </details>
+     </div>
+    </article>
+
+    <!-- 6. CÁN BỘ COI THI -->
+    <article class="role-card role-card--6">
+     <header class="role-head">
+      <h2>
+       Cán bộ coi thi
+      </h2>
+      <p>
+       6 nhóm chức năng · 8 module tận cùng (đã gộp &amp; tái sử dụng)
+      </p>
+     </header>
+     <div class="role-body">
+      <details class="menu" open="">
+       <summary>
+        <span class="caret">▾</span>
+        <span class="menu-title">Xác thực & Thông tin cá nhân</span>
+        <span class="menu-code">6.0</span>
+       </summary>
+       <ul>
+        <li>
+         <div class="leaf-top">
+          <span class="leaf-code">6.0.1</span>
+          <span class="leaf-name">Xác thực phiên đăng nhập & Quản lý thông tin cá nhân</span>
+          <span class="reuse-tag">♻ Tái sử dụng module 1.1, 1.2 của Admin</span>
+         </div>
+         <div class="io-box">
+          <div class="io-row"><span class="badge-in">Input</span><span class="io-text">Thông tin đăng nhập, Token phiên làm việc, thông tin cá nhân</span></div>
+          <div class="io-row"><span class="badge-out">Output</span><span class="io-text">Phiên làm việc của Cán bộ coi thi, cập nhật thông tin cá nhân thành công</span></div>
+         </div>
+        </li>
+       </ul>
+      </details>
+      <details class="menu" open="">
+       <summary>
+        <span class="caret">▾</span>
+        <span class="menu-title">Quản lý phòng thi được phân công</span>
+        <span class="menu-code">6.1</span>
+       </summary>
+       <ul>
+        <li>
+         <div class="leaf-top">
+          <span class="leaf-code">6.1.1</span>
+          <span class="leaf-name">Xem phòng thi được phân công, danh sách sinh viên và kiểm tra sĩ số</span>
+          <span class="reuse-tag">♻ Tái sử dụng dữ liệu phòng thi & danh sách SV từ module 3.1.1, 5.2.1, 5.3.1</span>
+         </div>
+         <div class="io-box">
+          <div class="io-row"><span class="badge-in">Input</span><span class="io-text">ID tài khoản cán bộ coi thi, ca thi hiện tại, ID phòng thi</span></div>
+          <div class="io-row"><span class="badge-out">Output</span><span class="io-text">Danh sách phòng thi phụ trách, danh sách thí sinh và thống kê sĩ số (Tổng số / Có mặt / Vắng)</span></div>
+         </div>
+        </li>
+       </ul>
+      </details>
+      <details class="menu" open="">
+       <summary>
+        <span class="caret">▾</span>
+        <span class="menu-title">Điểm danh</span>
+        <span class="menu-code">6.2</span>
+       </summary>
+       <ul>
+        <li>
+         <div class="leaf-top">
+          <span class="leaf-code">6.2.1</span>
+          <span class="leaf-name">Cập nhật trạng thái điểm danh (Đã vào / Vắng mặt) và kiểm tra sẵn sàng</span>
+         </div>
+         <div class="io-box">
+          <div class="io-row"><span class="badge-in">Input</span><span class="io-text">Mã SV, trạng thái kết nối máy client trong phòng chờ</span></div>
+          <div class="io-row"><span class="badge-out">Output</span><span class="io-text">Cập nhật trạng thái điểm danh (Đã vào / Vắng mặt) và trạng thái sẵn sàng (Online/Ready) của thí sinh</span></div>
+         </div>
+        </li>
+       </ul>
+      </details>
+      <details class="menu" open="">
+       <summary>
+        <span class="caret">▾</span>
+        <span class="menu-title">Điều khiển kỳ thi</span>
+        <span class="menu-code">6.3</span>
+       </summary>
+       <ul>
+        <li>
+         <div class="leaf-top">
+          <span class="leaf-code">6.3.1</span>
+          <span class="leaf-name">Điều khiển trạng thái ca thi (Bắt đầu thi, Phát đề, Cộng giờ, Cưỡng chế thu bài)</span>
+         </div>
+         <div class="io-box">
+          <div class="io-row"><span class="badge-in">Input</span><span class="io-text">Lệnh kích hoạt ca thi, lệnh phát đề, số phút cộng thêm, hoặc lệnh cưỡng chế thu bài</span></div>
+          <div class="io-row"><span class="badge-out">Output</span><span class="io-text">Chuyển trạng thái ca thi, đẩy đề thi xuống client, cập nhật đồng hồ đếm ngược hoặc khóa/thu bài tự động</span></div>
+         </div>
+        </li>
+        <li>
+         <div class="leaf-top">
+          <span class="leaf-code">6.3.2</span>
+          <span class="leaf-name">Gửi thông báo đến sinh viên</span>
+         </div>
+         <div class="io-box">
+          <div class="io-row"><span class="badge-in">Input</span><span class="io-text">Nội dung tin nhắn thông báo (nhắc thời gian, hướng dẫn sự cố)</span></div>
+          <div class="io-row"><span class="badge-out">Output</span><span class="io-text">Hiển thị popup thông báo trên màn hình làm bài của sinh viên</span></div>
+         </div>
+        </li>
+       </ul>
+      </details>
+      <details class="menu" open="">
+       <summary>
+        <span class="caret">▾</span>
+        <span class="menu-title">Giám sát thí sinh</span>
+        <span class="menu-code">6.4</span>
+       </summary>
+       <ul>
+        <li>
+         <div class="leaf-top">
+          <span class="leaf-code">6.4.1</span>
+          <span class="leaf-name">Theo dõi tiến độ làm bài, trạng thái kết nối (Online/Offline/Cảnh báo) và trạng thái nộp bài</span>
+          <span class="reuse-tag">♻ Tái sử dụng theo dõi kết nối Socket từ module 1.4.3 của Admin</span>
+         </div>
+         <div class="io-box">
+          <div class="io-row"><span class="badge-in">Input</span><span class="io-text">Dữ liệu tiến độ thời gian thực, tín hiệu Heartbeat Socket, trạng thái nộp bài của thí sinh</span></div>
+          <div class="io-row"><span class="badge-out">Output</span><span class="io-text">Hiển thị số câu đã làm, trạng thái Online/Offline, cảnh báo rớt mạng và trạng thái Đã nộp/Chưa nộp</span></div>
+         </div>
+        </li>
+       </ul>
+      </details>
+      <details class="menu" open="">
+       <summary>
+        <span class="caret">▾</span>
+        <span class="menu-title">Xử lý sự cố và vi phạm</span>
+        <span class="menu-code">6.5</span>
+       </summary>
+       <ul>
+        <li>
+         <div class="leaf-top">
+          <span class="leaf-code">6.5.1</span>
+          <span class="leaf-name">Xem và xử lý trạng thái yêu cầu kết nối lại (Duyệt / Từ chối)</span>
+         </div>
+         <div class="io-box">
+          <div class="io-row"><span class="badge-in">Input</span><span class="io-text">Yêu cầu Reconnect từ sinh viên bị rớt mạng, lệnh Duyệt (Approve) hoặc Từ chối (Reject)</span></div>
+          <div class="io-row"><span class="badge-out">Output</span><span class="io-text">Cho phép client kết nối lại và đồng bộ bài làm hoặc giữ nguyên trạng thái khóa bài thi</span></div>
+         </div>
+        </li>
+        <li>
+         <div class="leaf-top">
+          <span class="leaf-code">6.5.2</span>
+          <span class="leaf-name">Ghi nhận và lập biên bản vi phạm quy chế thi</span>
+         </div>
+         <div class="io-box">
+          <div class="io-row"><span class="badge-in">Input</span><span class="io-text">Mã SV, hình thức vi phạm, thông tin chi tiết biên bản, xác nhận của cán bộ</span></div>
+          <div class="io-row"><span class="badge-out">Output</span><span class="io-text">Lưu thông tin vi phạm và tạo tệp biên bản vi phạm quy chế thi chính thức</span></div>
+         </div>
+        </li>
+       </ul>
+      </details>
+     </div>
+    </article>
+
+    <!-- 7. SINH VIÊN -->
+    <article class="role-card role-card--7">
+     <header class="role-head">
+      <h2>
+       Sinh viên
+      </h2>
+      <p>
+       6 nhóm chức năng · 9 module tận cùng (đã gộp &amp; tái sử dụng)
+      </p>
+     </header>
+     <div class="role-body">
+      <details class="menu" open="">
+       <summary>
+        <span class="caret">▾</span>
+        <span class="menu-title">Xác thực & Thông tin cá nhân</span>
+        <span class="menu-code">7.0</span>
+       </summary>
+       <ul>
+        <li>
+         <div class="leaf-top">
+          <span class="leaf-code">7.0.1</span>
+          <span class="leaf-name">Xác thực phiên đăng nhập & Quản lý thông tin cá nhân</span>
+          <span class="reuse-tag">♻ Tái sử dụng module 1.1, 1.2 của Admin</span>
+         </div>
+         <div class="io-box">
+          <div class="io-row"><span class="badge-in">Input</span><span class="io-text">Thông tin đăng nhập sinh viên, Token phiên làm việc, mật khẩu</span></div>
+          <div class="io-row"><span class="badge-out">Output</span><span class="io-text">Phiên làm việc của Sinh viên, kiểm tra trùng phiên và cập nhật mật khẩu thành công</span></div>
+         </div>
+        </li>
+       </ul>
+      </details>
+      <details class="menu" open="">
+       <summary>
+        <span class="caret">▾</span>
+        <span class="menu-title">Lịch thi cá nhân</span>
+        <span class="menu-code">7.1</span>
+       </summary>
+       <ul>
+        <li>
+         <div class="leaf-top">
+          <span class="leaf-code">7.1.1</span>
+          <span class="leaf-name">Tra cứu lịch thi cá nhân và xem trạng thái kỳ thi (Môn, Ngày, Ca, Phòng, Trạng thái)</span>
+          <span class="reuse-tag">♻ Tái sử dụng dữ liệu lịch thi từ module 5.1.1, 5.2.1, 5.4.1 của Phòng Khảo thí</span>
+         </div>
+         <div class="io-box">
+          <div class="io-row"><span class="badge-in">Input</span><span class="io-text">Mã SV, thông tin tài khoản sinh viên đăng nhập</span></div>
+          <div class="io-row"><span class="badge-out">Output</span><span class="io-text">Bảng tổng hợp lịch thi cá nhân (Môn thi, ngày thi, khung giờ ca thi, phòng thi, trạng thái kỳ thi)</span></div>
+         </div>
+        </li>
+       </ul>
+      </details>
+      <details class="menu" open="">
+       <summary>
+        <span class="caret">▾</span>
+        <span class="menu-title">Phòng chờ trực tuyến</span>
+        <span class="menu-code">7.2</span>
+       </summary>
+       <ul>
+        <li>
+         <div class="leaf-top">
+          <span class="leaf-code">7.2.1</span>
+          <span class="leaf-name">Vào phòng chờ, kiểm tra trạng thái kết nối Server và nhận thông báo</span>
+          <span class="reuse-tag">♻ Tái sử dụng luồng kết nối & thông báo từ module 6.2.1, 6.3.2 của Cán bộ coi thi</span>
+         </div>
+         <div class="io-box">
+          <div class="io-row"><span class="badge-in">Input</span><span class="io-text">Thao tác vào phòng chờ, tín hiệu kiểm tra Socket ngầm, gói tin thông báo đẩy</span></div>
+          <div class="io-row"><span class="badge-out">Output</span><span class="io-text">Giao diện phòng chờ trực tuyến, hiển thị trạng thái kết nối (Green/Red) và hộp thoại thông báo từ giám thị</span></div>
+         </div>
+        </li>
+       </ul>
+      </details>
+      <details class="menu" open="">
+       <summary>
+        <span class="caret">▾</span>
+        <span class="menu-title">Làm bài thi</span>
+        <span class="menu-code">7.3</span>
+       </summary>
+       <ul>
+        <li>
+         <div class="leaf-top">
+          <span class="leaf-code">7.3.1</span>
+          <span class="leaf-name">Nhận đề thi, hiển thị câu hỏi và đồng hồ đếm ngược</span>
+          <span class="reuse-tag">♻ Tái sử dụng gói đề thi từ module 5.5.2 (Khảo thí) và lệnh mở đề 6.3.1 (Cán bộ coi thi)</span>
+         </div>
+         <div class="io-box">
+          <div class="io-row"><span class="badge-in">Input</span><span class="io-text">Sự kiện bắt đầu ca thi, gói dữ liệu JSON đề thi đã trộn, thời gian đồng bộ từ Server</span></div>
+          <div class="io-row"><span class="badge-out">Output</span><span class="io-text">Giao diện hiển thị nội dung câu hỏi, phương án lựa chọn và đồng hồ đếm ngược thời gian thực</span></div>
+         </div>
+        </li>
+        <li>
+         <div class="leaf-top">
+          <span class="leaf-code">7.3.2</span>
+          <span class="leaf-name">Chọn/thay đổi đáp án và bật/tắt trạng thái gắn cờ câu hỏi</span>
+         </div>
+         <div class="io-box">
+          <div class="io-row"><span class="badge-in">Input</span><span class="io-text">Thao tác chọn/đổi phương án (A, B, C, D) và thao tác bật/tắt gắn cờ (Flag) câu hỏi</span></div>
+          <div class="io-row"><span class="badge-out">Output</span><span class="io-text">Cập nhật phương án trả lời vào state local và đổi màu đánh dấu trạng thái câu hỏi trên danh sách tổng quan</span></div>
+         </div>
+        </li>
+       </ul>
+      </details>
+      <details class="menu" open="">
+       <summary>
+        <span class="caret">▾</span>
+        <span class="menu-title">Lưu và khôi phục bài làm</span>
+        <span class="menu-code">7.4</span>
+       </summary>
+       <ul>
+        <li>
+         <div class="leaf-top">
+          <span class="leaf-code">7.4.1</span>
+          <span class="leaf-name">Gửi và tự động lưu đáp án sau mỗi thao tác (Auto-save)</span>
+         </div>
+         <div class="io-box">
+          <div class="io-row"><span class="badge-in">Input</span><span class="io-text">Sự kiện thay đổi lựa chọn đáp án (OnChange), dữ liệu đáp án mới chọn</span></div>
+          <div class="io-row"><span class="badge-out">Output</span><span class="io-text">Gửi gói tin qua mạng và lưu tạm thời trạng thái bài làm lên Database Server</span></div>
+         </div>
+        </li>
+        <li>
+         <div class="leaf-top">
+          <span class="leaf-code">7.4.2</span>
+          <span class="leaf-name">Khôi phục đáp án và thời gian làm bài sau khi mất kết nối</span>
+          <span class="reuse-tag">♻ Tái sử dụng luồng duyệt kết nối lại từ module 6.5.1 của Cán bộ coi thi</span>
+         </div>
+         <div class="io-box">
+          <div class="io-row"><span class="badge-in">Input</span><span class="io-text">Sự kiện kết nối lại thành công sau khi được giám thị duyệt</span></div>
+          <div class="io-row"><span class="badge-out">Output</span><span class="io-text">Tải lại toàn bộ đáp án đã lưu gần nhất và đồng bộ tiếp tục thời gian làm bài thực tế còn lại</span></div>
+         </div>
+        </li>
+       </ul>
+      </details>
+      <details class="menu" open="">
+       <summary>
+        <span class="caret">▾</span>
+        <span class="menu-title">Nộp bài và xem kết quả</span>
+        <span class="menu-code">7.5</span>
+       </summary>
+       <ul>
+        <li>
+         <div class="leaf-top">
+          <span class="leaf-code">7.5.1</span>
+          <span class="leaf-name">Nộp bài sớm và xác nhận nộp bài</span>
+         </div>
+         <div class="io-box">
+          <div class="io-row"><span class="badge-in">Input</span><span class="io-text">Thao tác bấm nút Nộp bài và đồng ý xác nhận nộp bài</span></div>
+          <div class="io-row"><span class="badge-out">Output</span><span class="io-text">Khóa giao diện làm bài, gửi toàn bộ gói bài làm cuối cùng lên Server, kết thúc phiên thi</span></div>
+         </div>
+        </li>
+        <li>
+         <div class="leaf-top">
+          <span class="leaf-code">7.5.2</span>
+          <span class="leaf-name">Xem điểm sau khi nộp bài</span>
+          <span class="reuse-tag">♻ Tái sử dụng module 5.6.1 của Phòng Khảo thí</span>
+         </div>
+         <div class="io-box">
+          <div class="io-row"><span class="badge-in">Input</span><span class="io-text">Dữ liệu kết quả chấm điểm tự động từ Server trả về ngay sau khi nộp</span></div>
+          <div class="io-row"><span class="badge-out">Output</span><span class="io-text">Hiển thị bảng thông báo điểm số chính thức ngay trên màn hình cho sinh viên</span></div>
+         </div>
+        </li>
+       </ul>
+      </details>
+     </div>
+    </article>
+
+   </section>
+  </main>
+ </body>
+</html>

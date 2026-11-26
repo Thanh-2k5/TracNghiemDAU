@@ -1,23 +1,25 @@
-# --- Backend Server (FastAPI & WebSocket) ---
-fastapi>=0.110.0
-uvicorn[standard]>=0.28.0
-pydantic>=2.6.0
-pydantic-settings>=2.2.0
-python-multipart>=0.0.9
-websockets>=12.0
+# ==========================================================
+#  Hệ thống thi trắc nghiệm trực tuyến DAU - Thư viện Python
+# ==========================================================
 
-# --- Database & ORM (MySQL & SQLAlchemy) ---
-SQLAlchemy>=2.0.28
-pymysql>=1.1.0
+# --- Backend Server: FastAPI (REST) + WebSocket ---
+fastapi>=0.110.0
+uvicorn[standard]>=0.29.0
+pydantic>=2.6.0
+python-multipart>=0.0.9
+
+# --- Cơ sở dữ liệu: MySQL + SQLAlchemy ORM ---
+SQLAlchemy>=2.0.29
+PyMySQL>=1.1.0
 cryptography>=42.0.0
 
-# --- Security & Authentication ---
-python-jose[cryptography]>=3.3.0
-passlib[bcrypt]>=1.7.4
+# --- Bảo mật: băm mật khẩu & JWT ---
+bcrypt>=4.1.0
+PyJWT>=2.8.0
+
+# --- Cấu hình môi trường ---
 python-dotenv>=1.0.1
 
-# --- Desktop Client (PySide6 & Network) ---
-PySide6>=6.6.2
+# --- Desktop Client: PySide6 (Qt) + HTTP ---
+PySide6>=6.7.0
 requests>=2.31.0
-httpx>=0.27.0
-websocket-client>=1.7.0
