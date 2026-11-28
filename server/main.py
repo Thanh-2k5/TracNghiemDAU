@@ -20,6 +20,7 @@ from server.routers import (
     network_router,
     profile_router,
     ws_router,
+    khoa_router,
 )
 from server.services import network_service, session_service
 from server.socket_server.connection_manager import socket_manager
@@ -116,6 +117,7 @@ app.include_router(account_router.router)
 app.include_router(network_router.router)
 app.include_router(backup_router.router)
 app.include_router(ws_router.router)
+app.include_router(khoa_router.router)
 
 
 def main():

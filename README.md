@@ -31,6 +31,12 @@ Dự án **Xây dựng hệ thống thi trắc nghiệm trực tuyến đơn gi�
 - **1.5. Dữ liệu & vận hành (Admin)**:
   - Sao lưu (Backup) cơ sở dữ liệu ra tệp `.sql` và Phục hồi (Restore) an toàn có tạo bản `pre_restore_*.sql` (`1.5.1`).
 
+## Phân hệ Khoa (4.1–4.3)
+
+- **4.1 Học phần**: CRUD và tìm kiếm mã môn, tên môn, số tín chỉ, thời gian thi.
+- **4.2 Chương kiến thức**: CRUD và sắp xếp thứ tự chương theo từng học phần.
+- **4.3 Ngân hàng câu hỏi**: CRUD 7 dạng câu hỏi, ẩn/hiện, nhập hàng loạt `.xlsx`/`.docx`, lập ma trận và lọc theo chương/độ khó.
+
 ## Tài khoản mặc định (tự động khởi tạo khi chạy Server lần đầu)
 
 | Vai trò | Username | Mật khẩu |
